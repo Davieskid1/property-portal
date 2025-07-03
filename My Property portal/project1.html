@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Property Portal</title>
+    <link rel="stylesheet" href="css/project1.css">
+    <!-- Font Awesome for icons (e.g., search icon) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="container">
+                <h1 class="logo"><a href="#">PropertyPortal</a></h1>
+                <ul class="nav-links">
+                    <li><a href="#property-listings-main-section" id="nav-buy-rent-sell">Buy/Rent/Sell</a></li>
+                    <li class="hidden" id="add-property-nav-link"><a href="#add-property-section">Add Property</a></li>
+                    <li><a href="#contact-section" id="contact-nav-link">Contact</a></li>
+                    <!-- Authentication Links - Initially visible -->
+                    <li id="login-nav-link"><a href="#login-section">Login</a></li>
+                    <li id="create-account-nav-link"><a href="#create-account-section">Create Account</a></li>
+                    <!-- User Display Area - Initially hidden, shown after login -->
+                    <li class="user-display-area hidden" id="user-display-area">
+                        Welcome, <span id="user-email"></span>!
+                        <button id="logout-button" class="logout-btn">Logout</button>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <div class="hero-section">
+            <!-- Background image for the hero section -->
+            <img src="img/background img.jpg" alt="Beautiful house background" class="hero-background-img">
+            <div class="container hero-content">
+                <h2>Find Your Dream Property</h2>
+                <p>Browse properties for sale or rent, or list your own.</p>
+                <div class="search-bar">
+                    <input type="text" id="search-location" placeholder="Enter location (e.g., Anytown, 12345)">
+                    <button id="search-button"><i class="fas fa-search"></i> Search</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Login Section - Initially shown if no user logged in -->
+        <section id="login-section" class="auth-section hidden">
+            <h2>Login to Your Account</h2>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="login-email">Email:</label>
+                    <input type="email" id="login-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password:</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <button type="submit" class="btn">Login</button>
+                <p class="error-message hidden" id="login-error-message"></p>
+                <p class="form-switch-text">Don't have an account? <a href="#" id="switch-to-create">Create one here</a>.</p>
+            </form>
+        </section>
+
+        <!-- Create Account Section - Initially hidden -->
+        <section id="create-account-section" class="auth-section hidden">
+            <h2>Create a New Account</h2>
+            <form id="create-account-form">
+                <div class="form-group">
+                    <label for="create-email">Email:</label>
+                    <input type="email" id="create-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="create-password">Password:</label>
+                    <input type="password" id="create-password" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirm-password">Confirm Password:</label>
+                    <input type="password" id="confirm-password" required>
+                </div>
+                <button type="submit" class="btn">Create Account</button>
+                <p class="error-message hidden" id="create-error-message"></p>
+                <p class="form-switch-text">Already have an account? <a href="#" id="switch-to-login">Login here</a>.</p>
+            </form>
+        </section>
+
+        <!-- Property Listings Section - Initially hidden, shown after login -->
+        <section id="property-listings-main-section" class="hidden">
+            <h2>Available Properties</h2>
+            <div class="filters">
+                <form id="filter-form">
+                    <div class="filter-group">
+                        <label for="location-filter">Location:</label>
+                        <input type="text" id="location-filter" placeholder="City, State, Zip">
+                    </div>
+                    <div class="filter-group">
+                        <label for="min-price">Min Price:</label>
+                        <input type="number" id="min-price" placeholder="e.g., 100000">
+                    </div>
+                    <div class="filter-group">
+                        <label for="max-price">Max Price:</label>
+                        <input type="number" id="max-price" placeholder="e.g., 500000">
+                    </div>
+                    <div class="filter-group">
+                        <label for="property-type">Property Type:</label>
+                        <select id="property-type">
+                            <option value="">Any</option>
+                            <option value="residential">Residential</option>
+                            <option value="commercial">Commercial</option>
+                            <option value="land">Land</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="bedrooms">Bedrooms:</label>
+                        <input type="number" id="bedrooms" min="0" placeholder="Any">
+                    </div>
+                    <div class="filter-group">
+                        <label for="bathrooms">Bathrooms:</label>
+                        <input type="number" id="bathrooms" min="0" step="0.5" placeholder="Any">
+                    </div>
+                    <div class="filter-group">
+                        <label for="min-sqft">Min Sqft:</label>
+                        <input type="number" id="min-sqft" min="0" placeholder="Any">
+                    </div>
+                    <div class="filter-group">
+                        <label for="max-sqft">Max Sqft:</label>
+                        <input type="number" id="max-sqft" min="0" placeholder="Any">
+                    </div>
+                    <button type="submit" class="btn filter-btn">Apply Filters</button>
+                    <button type="reset" class="btn reset-btn">Reset Filters</button>
+                </form>
+            </div>
+            <div id="property-grid" class="property-grid">
+                <!-- Property cards will be loaded here by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Add Property Section - Initially hidden, shown after login -->
+        <section id="add-property-section" class="hidden">
+            <h2>Add New Property</h2>
+            <form id="add-property-form">
+                <div class="form-group">
+                    <label for="property-title">Title:</label>
+                    <input type="text" id="property-title" required>
+                </div>
+                <div class="form-group">
+                    <label for="property-description">Description:</label>
+                    <textarea id="property-description" rows="4" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="property-address">Address:</label>
+                    <input type="text" id="property-address" required>
+                </div>
+                <div class="form-group">
+                    <label for="property-city">City:</label>
+                    <input type="text" id="property-city" required>
+                </div>
+                <div class="form-group">
+                    <label for="property-state">State:</label>
+                    <input type="text" id="property-state" required>
+                </div>
+                <div class="form-group">
+                    <label for="property-zip">Zip Code:</label>
+                    <input type="text" id="property-zip" required>
+                </div>
+                <div class="form-group">
+                    <label for="property-price">Price:</label>
+                    <input type="number" id="property-price" step="any" required>
+                </div>
+                <div class="form-group">
+                    <label for="property-type-add">Property Type:</label>
+                    <select id="property-type-add" required>
+                        <option value="residential">Residential</option>
+                        <option value="commercial">Commercial</option>
+                        <option value="land">Land</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="num-bedrooms">Bedrooms:</label>
+                    <input type="number" id="num-bedrooms" min="0" value="0">
+                </div>
+                <div class="form-group">
+                    <label for="num-bathrooms">Bathrooms:</label>
+                    <input type="number" id="num-bathrooms" min="0" step="0.5" value="0">
+                </div>
+                <div class="form-group">
+                    <label for="square-footage-add">Square Footage:</label>
+                    <input type="number" id="square-footage-add" min="0" value="0">
+                </div>
+                <div class="form-group">
+                    <label for="property-amenities">Amenities (comma-separated):</label>
+                    <input type="text" id="property-amenities" placeholder="e.g., Garage, Pool, Balcony">
+                </div>
+                <div class="form-group">
+                    <label for="property-images">Property Images:</label>
+                    <input type="file" id="property-images" accept="image/*">
+                    <div class="image-preview-container">
+                        <img id="property-image-preview" src="https://placehold.co/150x100/e0e0e0/ffffff?text=Image+Preview" alt="Image Preview" class="hidden">
+                        <p id="no-image-selected-text">No image selected</p>
+                    </div>
+                </div>
+                <button type="submit" class="btn">Add Property</button>
+            </form>
+        </section>
+
+        <!-- Property Details Section - NEWLY ADDED - Initially hidden -->
+        <section id="property-details-section" class="property-details-section hidden">
+            <button id="back-to-listings-btn" class="btn back-btn"><i class="fas fa-arrow-left"></i> Back to Listings</button>
+            <h2 id="details-title"></h2>
+            <p class="details-price" id="details-price"></p>
+            <p class="details-address" id="details-address"></p>
+            <p class="details-bed-bath-sqft" id="details-bed-bath-sqft"></p>
+            <div class="details-image-gallery" id="details-image-gallery">
+                <!-- Images will be loaded here by JavaScript -->
+            </div>
+            <h3>Description</h3>
+            <p id="details-description"></p>
+            <h3>Amenities</h3>
+            <p id="details-amenities"></p>
+            <!-- Add contact information here if desired -->
+            <h3>Contact Information</h3>
+            <p>For inquiries, please contact us at: <a href="mailto:info@propertyportal.com">info@propertyportal.com</a></p>
+            <p>Or call: (123) 456-7890</p>
+        </section>
+
+
+        <!-- Contact Section - Initially hidden, shown after login -->
+        <section id="contact-section" class="hidden">
+            <h2>Contact Us</h2>
+            <form id="contact-form">
+                <div class="form-group">
+                    <label for="contact-name">Name:</label>
+                    <input type="text" id="contact-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="contact-email">Email:</label>
+                    <input type="email" id="contact-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="contact-phone">Phone (Optional):</label>
+                    <input type="tel" id="contact-phone">
+                </div>
+                <div class="form-group">
+                    <label for="contact-subject">Subject:</label>
+                    <input type="text" id="contact-subject" required>
+                </div>
+                <div class="form-group">
+                    <label for="contact-message">Message:</label>
+                    <textarea id="contact-message" rows="5" required></textarea>
+                </div>
+                <button type="submit" class="btn">Send Message</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 PropertyPortal. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Custom Confirmation Modal HTML -->
+    <div id="custom-confirm-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <p id="modal-message"></p>
+            <div class="modal-buttons">
+                <button id="modal-confirm-btn" class="btn confirm-btn">Yes, Delete</button>
+                <button id="modal-cancel-btn" class="btn cancel-btn">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Link to your JavaScript file -->
+    <script src="js/project.js"></script>
+</body>
+</html>
